@@ -67,7 +67,7 @@ public class AdministratorController {
 
 	/**
 	 * 管理者情報を登録します.
-	 * 
+	 *
 	 * @param form 管理者情報用フォーム
 	 * @return ログイン画面へリダイレクト
 	 */
