@@ -49,6 +49,7 @@ public class AdministratorController {
 	 */
 	@ModelAttribute
 	public LoginForm setUpLoginForm() {
+
 		return new LoginForm();
 	}
 
@@ -61,7 +62,7 @@ public class AdministratorController {
 	 * @return 管理者登録画面
 	 */
 	@GetMapping("/toInsert")
-	public String toInsert() {
+	public String toInsert(InsertAdministratorForm form) {
 		return "administrator/insert";
 	}
 
@@ -77,7 +78,7 @@ public class AdministratorController {
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
 		administratorService.insert(administrator);
-		return "employee/list";
+		return "administrator/login";
 	}
 
 	/////////////////////////////////////////////////////
