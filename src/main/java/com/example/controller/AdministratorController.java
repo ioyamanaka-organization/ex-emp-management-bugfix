@@ -77,13 +77,18 @@ public class AdministratorController {
 	 */
 	@PostMapping("/insert")
 	public String insert(@Validated InsertAdministratorForm form, BindingResult result) {
+    
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
-
+		if (!administrator.getPassword().equals(administrator.getConfirmPassword())){
+			result.rejectValue("confirmPassword", "", "パスワードと確認用パスワードが一致していません");
+    }
+    
 		if (administratorService.findByMailAddress(administrator.getMailAddress(), result) != null){
 			result.rejectValue("mailAddress", "","そのメールアドレスは既に存在しています");
 		}
+      
 		if (result.hasErrors()){
 			return toInsert(form);
 		}
