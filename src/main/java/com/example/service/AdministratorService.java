@@ -1,6 +1,7 @@
 package com.example.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,12 @@ public class AdministratorService {
 
 	@Autowired
 	private AdministratorRepository administratorRepository;
+	private final PasswordEncoder passwordEncoder;
+
+	@Autowired
+	public AdministratorService(PasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
+	}
 
 
 	/**
@@ -29,6 +36,8 @@ public class AdministratorService {
 	 * @param administrator 管理者情報
 	 */
 	public void insert(Administrator administrator) {
+		String hashedPassword = passwordEncoder.encode(administrator.getPassword());
+		administrator.setPassword(hashedPassword);
 		administratorRepository.insert(administrator);
 	}
 

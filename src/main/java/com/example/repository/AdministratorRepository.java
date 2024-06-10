@@ -39,13 +39,7 @@ public class AdministratorRepository {
 
 	@Autowired
 	private NamedParameterJdbcTemplate template;
-	private final PasswordEncoder passwordEncoder;
 
-	@Autowired
-	public AdministratorRepository(NamedParameterJdbcTemplate template, PasswordEncoder passwordEncoder) {
-		this.template = template;
-		this.passwordEncoder = passwordEncoder;
-	}
 
 	/**
 	 * 主キーから管理者情報を取得します.
@@ -84,8 +78,6 @@ public class AdministratorRepository {
 	 * @param administrator 管理者情報
 	 */
 	public void insert(Administrator administrator) {
-		String hashedPassword = passwordEncoder.encode(administrator.getPassword());
-		administrator.setPassword(hashedPassword);
 		SqlParameterSource param = new BeanPropertySqlParameterSource(administrator);
 		String sql = "insert into administrators(name,mail_address,password)values(:name,:mailAddress,:password);";
 		template.update(sql, param);
