@@ -3,12 +3,16 @@ package com.example.repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 import com.example.domain.Administrator;
 
@@ -35,6 +39,13 @@ public class AdministratorRepository {
 
 	@Autowired
 	private NamedParameterJdbcTemplate template;
+	private final PasswordEncoder passwordEncoder;
+
+	@Autowired
+	public AdministratorRepository(NamedParameterJdbcTemplate template, PasswordEncoder passwordEncoder) {
+		this.template = template;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	/**
 	 * 主キーから管理者情報を取得します.
@@ -73,6 +84,8 @@ public class AdministratorRepository {
 	 * @param administrator 管理者情報
 	 */
 	public void insert(Administrator administrator) {
+		String hashedPassword = passwordEncoder.encode(administrator.getPassword());
+		administrator.setPassword(hashedPassword);
 		SqlParameterSource param = new BeanPropertySqlParameterSource(administrator);
 		String sql = "insert into administrators(name,mail_address,password)values(:name,:mailAddress,:password);";
 		template.update(sql, param);
