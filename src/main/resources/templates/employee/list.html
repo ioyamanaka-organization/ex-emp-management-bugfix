@@ -89,6 +89,12 @@
         </li>
       </ol>
 
+<!--      曖昧検索フォーム-->
+      <form action="list.html" th:action="@{/employee/fuzzySearch}" method="post">
+      <input type="text" name="name">
+         <button>検索</button>
+      </form>
+
       <!-- table -->
       <div class="row">
         <div
