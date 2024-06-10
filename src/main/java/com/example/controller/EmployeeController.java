@@ -73,31 +73,6 @@ public class EmployeeController {
 		return "employee/list";
 	}
 
-	/**
-	 * 従業員のあいまい検索をします.
-	 *
-	 * @param form 従業員の名前が入ったフォーム
-	 * @param result エラーがはいるオブジェクト
-	 * @param model モデル
-	 * @return 従業員一覧画面へリダクレクト
-	 */
-	@GetMapping("/searchName")
-	public String searchName(@Validated SearchNameForm form, BindingResult result, Model model) {
-		if (result.hasErrors()) {
-			List<Employee> employeeList = employeeService.showList();
-			model.addAttribute("employeeList", employeeList);
-			return "employee/list";
-		}
-
-		List<Employee> employeeList = employeeService.searchName(form.getName());
-		if (employeeList.isEmpty()) {
-			model.addAttribute("errorEmpty", "１件もありませんでした");
-			employeeList = employeeService.showList();
-		}
-		model.addAttribute("employeeList", employeeList);
-		return "employee/list";
-	}
-
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を表示する
 	/////////////////////////////////////////////////////
