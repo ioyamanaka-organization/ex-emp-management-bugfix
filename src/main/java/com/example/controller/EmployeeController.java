@@ -48,14 +48,13 @@ public class EmployeeController {
 	 * 従業員一覧画面または、あいまい検索の結果を出力します.
 	 *
 	 * @param form 従業員の名前が入ったフォーム
-	 * @param result エラーがはいるオブジェクト
 	 * @param model モデル
 	 * @param request リクエスト
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(@Validated SearchNameForm form, BindingResult result, Model model, HttpServletRequest request) {
-		if (result.hasErrors()) {
+	public String showList(SearchNameForm form, Model model, HttpServletRequest request) {
+		if (form.getName() == null) {
 			List<Employee> employeeList = employeeService.showList();
 			model.addAttribute("employeeList", employeeList);
 			return "employee/list";
