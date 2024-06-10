@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.util.List;
 
+import com.example.form.SearchNameForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,8 +50,33 @@ public class EmployeeController {
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(Model model) {
+	public String showList(SearchNameForm form, Model model) {
 		List<Employee> employeeList = employeeService.showList();
+		model.addAttribute("employeeList", employeeList);
+		return "employee/list";
+	}
+
+	/**
+	 * 従業員のあいまい検索をします.
+	 *
+	 * @param name 従業員の名前
+	 * @param result エラーがはいるオブジェクト
+	 * @param model モデル
+	 * @return 従業員一覧画面へリダクレクト
+	 */
+	@PostMapping("/searchName")
+	public String searchName(@Validated SearchNameForm form, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			List<Employee> employeeList = employeeService.showList();
+			model.addAttribute("employeeList", employeeList);
+			return "employee/list";
+		}
+
+		List<Employee> employeeList = employeeService.searchName(form.getName());
+		if (employeeList.isEmpty()) {
+			model.addAttribute("errorEmpty", "１件もありませんでした");
+			employeeList = employeeService.showList();
+		}
 		model.addAttribute("employeeList", employeeList);
 		return "employee/list";
 	}

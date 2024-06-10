@@ -89,6 +89,20 @@
         </li>
       </ol>
 
+      <form method="post" action="list.html" th:action="@{/employee/searchName}" th:object="${searchNameForm}">
+        <div class="error-messages" th:text="${errorEmpty}" style="color:red"></div>
+        <input
+                type="text"
+                name="name"
+                class="form-control"
+                placeholder="山田太郎"
+                th:value="*{name}"
+        />
+      <button type="submit" class="btn btn-primary">
+        検索
+      </button>
+      </form>
+
       <!-- table -->
       <div class="row">
         <div
