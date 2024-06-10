@@ -3,6 +3,7 @@ package com.example.controller;
 import java.util.List;
 
 import com.example.form.SearchNameForm;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,14 +45,30 @@ public class EmployeeController {
 	// ユースケース：従業員一覧を表示する
 	/////////////////////////////////////////////////////
 	/**
-	 * 従業員一覧画面を出力します.
-	 * 
+	 * 従業員一覧画面または、あいまい検索の結果を出力します.
+	 *
+	 * @param form 従業員の名前が入ったフォーム
+	 * @param result エラーがはいるオブジェクト
 	 * @param model モデル
+	 * @param request リクエスト
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(SearchNameForm form, Model model) {
-		List<Employee> employeeList = employeeService.showList();
+	public String showList(@Validated SearchNameForm form, BindingResult result, Model model, HttpServletRequest request) {
+		if (result.hasErrors()) {
+			List<Employee> employeeList = employeeService.showList();
+			model.addAttribute("employeeList", employeeList);
+			return "employee/list";
+		}
+
+		List<Employee> employeeList = employeeService.searchName(form.getName());
+		if (employeeList.isEmpty()) {
+			if (request.getParameterMap().containsKey("name")){
+				model.addAttribute("errorEmpty", "１件もありませんでした");
+			}
+			employeeList = employeeService.showList();
+		}
+
 		model.addAttribute("employeeList", employeeList);
 		return "employee/list";
 	}
@@ -59,12 +76,12 @@ public class EmployeeController {
 	/**
 	 * 従業員のあいまい検索をします.
 	 *
-	 * @param name 従業員の名前
+	 * @param form 従業員の名前が入ったフォーム
 	 * @param result エラーがはいるオブジェクト
 	 * @param model モデル
 	 * @return 従業員一覧画面へリダクレクト
 	 */
-	@PostMapping("/searchName")
+	@GetMapping("/searchName")
 	public String searchName(@Validated SearchNameForm form, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			List<Employee> employeeList = employeeService.showList();

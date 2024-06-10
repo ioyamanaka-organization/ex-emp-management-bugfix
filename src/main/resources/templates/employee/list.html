@@ -89,7 +89,7 @@
         </li>
       </ol>
 
-      <form method="post" action="list.html" th:action="@{/employee/searchName}" th:object="${searchNameForm}">
+      <form method="get" action="list.html" th:action="@{/employee/showList}" th:object="${searchNameForm}">
         <div class="error-messages" th:text="${errorEmpty}" style="color:red"></div>
         <input
                 type="text"
