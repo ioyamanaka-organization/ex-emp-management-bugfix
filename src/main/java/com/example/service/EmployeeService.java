@@ -32,6 +32,17 @@ public class EmployeeService {
 		return employeeList;
 	}
 
+	// 6-5
+	/**
+	 * 従業員情報を10件取得します.
+	 *
+	 * @return 従業員情報10件
+	 */
+	public List<Employee> findTenEmployees(Integer offset) {
+		List<Employee> employeeList = employeeRepository.findTenEmployees(offset);
+		return employeeList;
+	}
+
 	/**
 	 * 従業員情報をあいまい検索します.
 	 *
