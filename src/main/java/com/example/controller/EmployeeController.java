@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.form.SearchNameForm;
@@ -53,7 +54,28 @@ public class EmployeeController {
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(SearchNameForm form, Model model, HttpServletRequest request) {
+	public String showList(SearchNameForm form, Model model, HttpServletRequest request, Integer page) {
+
+//			List<Employee> employeeList = employeeService.findTenEmployees(offset);
+
+
+//			model.addAttribute("employeeList", employeeList);
+
+
+		if (page == null){
+			page = 1;
+		}
+
+		List<Employee> employeeLists = employeeService.showList();
+		int size = employeeLists.size();
+		int pages = (int) Math.ceil((double)size / 10);
+		Integer offset = page * 10 - 9;
+		List<Integer> pageList = new ArrayList<>();
+		// 1からページ数までの数字をリストに追加
+		for (int i = 1; i <= pages; i++) {
+			pageList.add(i);
+		}
+
 		if (form.getName() == null) {
 			List<Employee> employeeList = employeeService.showList();
 			model.addAttribute("employeeList", employeeList);
@@ -68,6 +90,7 @@ public class EmployeeController {
 			employeeList = employeeService.showList();
 		}
 
+		model.addAttribute("pageList", pageList);
 		model.addAttribute("employeeList", employeeList);
 		return "employee/list";
 	}
