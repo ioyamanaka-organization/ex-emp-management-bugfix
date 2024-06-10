@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.Administrator;
 import com.example.repository.AdministratorRepository;
+import org.springframework.validation.BindingResult;
 
 /**
  * 管理者情報を操作するサービス.
@@ -27,6 +28,11 @@ public class AdministratorService {
 	 */
 	public void insert(Administrator administrator) {
 		administratorRepository.insert(administrator);
+	}
+
+	public Administrator findByMailAddress(String mailAddress, BindingResult result) {
+		Administrator administrator = administratorRepository.findByMailAddress(mailAddress);
+		return administrator;
 	}
 
 	/**
