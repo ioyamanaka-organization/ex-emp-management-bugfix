@@ -83,7 +83,6 @@ public class AdministratorController {
 		BeanUtils.copyProperties(form, administrator);
 		if (!administrator.getPassword().equals(administrator.getConfirmPassword())){
 			result.rejectValue("confirmPassword", "", "パスワードと確認用パスワードが一致していません");
-			return toInsert(form);
 		}
 		if (result.hasErrors()){
 			return toInsert(form);
