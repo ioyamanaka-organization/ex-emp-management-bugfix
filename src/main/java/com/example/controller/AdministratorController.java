@@ -77,9 +77,7 @@ public class AdministratorController {
 	 */
 	@PostMapping("/insert")
 	public String insert(@Validated InsertAdministratorForm form, BindingResult result, Model model) {
-		if (result.hasErrors()){
-			return toInsert(form);
-		}
+
 
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
