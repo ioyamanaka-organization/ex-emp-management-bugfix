@@ -23,13 +23,8 @@ public class AdministratorService {
 
 	@Autowired
 	private AdministratorRepository administratorRepository;
-	private final PasswordEncoder passwordEncoder;
-
 	@Autowired
-	public AdministratorService(PasswordEncoder passwordEncoder) {
-		this.passwordEncoder = passwordEncoder;
-	}
-
+	private PasswordEncoder passwordEncoder;
 
 	/**
 	 * 管理者情報を登録します.
@@ -55,7 +50,6 @@ public class AdministratorService {
 	 * @return 管理者情報 存在しない場合はnullが返ります
 	 */
 	public Administrator login(String mailAddress, String password) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		Administrator administrator = administratorRepository.findByMailAddress(mailAddress);
 		if (administrator != null && passwordEncoder.matches(password, administrator.getPassword())){
 			return administrator;
