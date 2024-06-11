@@ -38,8 +38,8 @@ public class EmployeeService {
 	 *
 	 * @return 従業員情報10件
 	 */
-	public List<Employee> findTenEmployees(Integer offset) {
-		List<Employee> employeeList = employeeRepository.findTenEmployees(offset);
+	public List<Employee> showList(String name, Integer offset) {
+		List<Employee> employeeList = employeeRepository.showList(name, offset);
 		return employeeList;
 	}
 

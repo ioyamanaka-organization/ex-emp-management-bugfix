@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.example.form.SearchNameForm;
@@ -55,49 +56,50 @@ public class EmployeeController {
 	 */
 	@GetMapping("/showList")
 	public String showList(SearchNameForm form, Model model, HttpServletRequest request, Integer page) {
-		List<Employee> employees = employeeService.showList();
-		if (page == null){
-			page = 1;
-		}
 
-
-		List<Employee> employeeList = employeeService.findTenEmployees(offset);
-		int size = employeeLists.size();
-		int pages = (int) Math.ceil((double)size / 10);
-		Integer offset = page * 10 - 9;
+//		全件表示時のpageのリスト
+		List<Employee> employees = employeeService.showList(null,null);
+		int pages = (int) Math.ceil((double)employees.size() / 10);
+		if (page == null){page = 1;}
 		List<Integer> pageList = new ArrayList<>();
 		// 1からページ数までの数字をリストに追加
 		for (int i = 1; i <= pages; i++) {
 			pageList.add(i);
 		}
 
-
+		// 初期表示
 		if (form.getName() == null) {
-
-			List<Employee> employeeList = employeeService.showList();
-			int size = employeeLists.size();
-			int pages = (int) Math.ceil((double)size / 10);
-			Integer offset = page * 10 - 9;
-			List<Integer> pageList = new ArrayList<>();
-			// 1からページ数までの数字をリストに追加
-			for (int i = 1; i <= pages; i++) {
-				pageList.add(i);
-			}
-
+			Integer offset = (page - 1) * 10;
+			List<Employee> employeeList = employeeService.showList(null,offset);
+			model.addAttribute("pageList", pageList);
 			model.addAttribute("employeeList", employeeList);
-			return "employee/list";
-		}
-
-		List<Employee> employeeList = employeeService.searchName(form.getName());
-		if (employeeList.isEmpty()) {
-			if (request.getParameterMap().containsKey("name")){
-				model.addAttribute("errorEmpty", "１件もありませんでした");
+		} else {
+			// 初期表示じゃないとき
+			List<Employee> employeeList = employeeService.showList(form.getName(),null);
+			// 検索結果が0件の時
+			if (employeeList.isEmpty()) {
+				// nameに値が入っていた時
+				if (request.getParameterMap().containsKey("name")){
+					model.addAttribute("errorEmpty", "１件もありませんでした");
+				}
+				Integer offset = (page - 1) * 10;
+				employeeList = employeeService.showList(null,offset);
+				model.addAttribute("pageList", pageList);
+				model.addAttribute("employeeList", employeeList);
+			} else {
+				//検索結果があった時
+				int resultPages = (int) Math.ceil((double)employeeList.size() / 10);
+				pageList = new ArrayList<>();
+				// 1からページ数までの数字をリストに追加
+				for (int i = 1; i <= resultPages; i++) {
+					pageList.add(i);
+				}
+				Integer offset = (page - 1) * 10;
+				employeeList = employeeService.showList(form.getName(),offset);
+				model.addAttribute("pageList", pageList);
+				model.addAttribute("employeeList", employeeList);
 			}
-			employeeList = employeeService.showList();
 		}
-
-		model.addAttribute("pageList", pageList);
-		model.addAttribute("employeeList", employeeList);
 		return "employee/list";
 	}
 
