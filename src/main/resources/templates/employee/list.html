@@ -152,12 +152,14 @@
           </table>
 
           <!--          6-5-->
-          <div th:each="page : ${pageList}">
-            <!--            <div th:text="${page}"></div>-->
-            <a href="detail.html"
-               th:href="@{'/employee/showList?page=' + ${page}}"
-               th:text="${page}"
-            ></a>
+          <div class="pagination-container">
+            <div th:each="page : ${pageList}" class="pagination">
+              <!--            <div th:text="${page}"></div>-->
+              <a href="detail.html"
+                 th:href="@{'/employee/showList?page=' + ${page}}"
+                 th:text="${page}"
+              ></a>
+            </div>
           </div>
 
           <!-- ここから下を編集する必要はありません -->
