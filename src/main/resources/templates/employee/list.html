@@ -107,9 +107,17 @@
           class="form-control"
           placeholder="山田太郎"
           th:value="*{name}"
+          autocomplete="name"
+          list="employeeList"
         />
+        <datalist id="employeeList">
+          <option th:each="employee:${employeeList}" th:value="${employee.name}"></option>
+        </datalist>
         <button type="submit" class="btn btn-primary">検索</button>
       </form>
+
+
+
 
       <!-- table -->
       <div class="row">
