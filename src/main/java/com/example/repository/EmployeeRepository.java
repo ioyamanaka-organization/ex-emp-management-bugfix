@@ -72,6 +72,29 @@ public class EmployeeRepository {
 	}
 
 	/**
+	 * 従業員情報を10件、入社日順で取得します.
+	 *
+	 * @return 従業員10件 従業員が存在しない場合はサイズ0件の従業員一覧を返します
+	 */
+	public List<Employee> showList(String name, Integer offset) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees");
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		if (name != null && !name.isEmpty()){
+			sql.append(" WHERE name LIKE :name");
+			param.addValue("name",  "%" + name + "%");
+		}
+		sql.append(" ORDER BY hire_date DESC");
+		if (offset != null){
+			sql.append(" LIMIT 10 OFFSET :offset");
+			param.addValue("offset", offset);
+		}
+		List<Employee> developmentList = template.query(sql.toString(), param, EMPLOYEE_ROW_MAPPER);
+
+		return developmentList;
+	}
+
+	/**
 	 * 主キーから従業員情報を取得します.
 	 * 
 	 * @param id 検索したい従業員ID
