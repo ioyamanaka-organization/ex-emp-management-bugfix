@@ -2,6 +2,8 @@ package com.example.controller;
 
 import java.util.List;
 
+import com.example.form.SearchNameForm;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,14 +45,29 @@ public class EmployeeController {
 	// ユースケース：従業員一覧を表示する
 	/////////////////////////////////////////////////////
 	/**
-	 * 従業員一覧画面を出力します.
-	 * 
+	 * 従業員一覧画面または、あいまい検索の結果を出力します.
+	 *
+	 * @param form 従業員の名前が入ったフォーム
 	 * @param model モデル
+	 * @param request リクエスト
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(Model model) {
-		List<Employee> employeeList = employeeService.showList();
+	public String showList(SearchNameForm form, Model model, HttpServletRequest request) {
+		if (form.getName() == null) {
+			List<Employee> employeeList = employeeService.showList();
+			model.addAttribute("employeeList", employeeList);
+			return "employee/list";
+		}
+
+		List<Employee> employeeList = employeeService.searchName(form.getName());
+		if (employeeList.isEmpty()) {
+			if (request.getParameterMap().containsKey("name")){
+				model.addAttribute("errorEmpty", "１件もありませんでした");
+			}
+			employeeList = employeeService.showList();
+		}
+
 		model.addAttribute("employeeList", employeeList);
 		return "employee/list";
 	}

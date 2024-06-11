@@ -89,10 +89,26 @@
         </li>
       </ol>
 
-<!--      曖昧検索フォーム-->
-      <form action="list.html" th:action="@{/employee/fuzzySearch}" method="post">
-      <input type="text" name="name">
-         <button>検索</button>
+<!--      検索フォーム-->
+      <form
+        method="get"
+        action="list.html"
+        th:action="@{/employee/showList}"
+        th:object="${searchNameForm}"
+      >
+        <div
+          class="error-messages"
+          th:text="${errorEmpty}"
+          style="color: red"
+        ></div>
+        <input
+          type="text"
+          name="name"
+          class="form-control"
+          placeholder="山田太郎"
+          th:value="*{name}"
+        />
+        <button type="submit" class="btn btn-primary">検索</button>
       </form>
 
       <!-- table -->
@@ -123,7 +139,10 @@
                   </a>
                 </td>
                 <td>
-                  <span th:text="${#dates.format(employee.hireDate, 'yyyy年MM月dd日')}">2012/11/29</span>
+                  <span
+                    th:text="${#dates.format(employee.hireDate, 'yyyy年MM月dd日')}"
+                    >2012/11/29</span
+                  >
                 </td>
                 <td>
                   <span th:text="${employee.dependentsCount} + '人'">3人</span>
