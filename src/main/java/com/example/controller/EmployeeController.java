@@ -53,42 +53,53 @@ public class EmployeeController {
 	 * @param request リクエスト
 	 * @return 従業員一覧画面
 	 */
-//	@GetMapping("/showList")
-//	public String showList(SearchNameForm form, Model model, HttpServletRequest request, Integer page) {
-//
-//		if (page == null){
-//			page = 1;
-//		}
-//
-//		int size = employeeLists.size();
-//		int pages = (int) Math.ceil((double)size / 10);
-//		Integer offset = page * 10 - 9;
-//		List<Integer> pageList = new ArrayList<>();
-//		// 1からページ数までの数字をリストに追加
-//		for (int i = 1; i <= pages; i++) {
-//			pageList.add(i);
-//		}
-//
-//		List<Employee> employeeList = employeeService.findTenEmployees(offset);
-//
-//		if (form.getName() == null) {
-//			List<Employee> employeeList = employeeService.showList();
-//			model.addAttribute("employeeList", employeeList);
-//			return "employee/list";
-//		}
-//
-//		List<Employee> employeeList = employeeService.searchName(form.getName());
-//		if (employeeList.isEmpty()) {
-//			if (request.getParameterMap().containsKey("name")){
-//				model.addAttribute("errorEmpty", "１件もありませんでした");
-//			}
-//			employeeList = employeeService.showList();
-//		}
-//
-//		model.addAttribute("pageList", pageList);
-//		model.addAttribute("employeeList", employeeList);
-//		return "employee/list";
-//	}
+	@GetMapping("/showList")
+	public String showList(SearchNameForm form, Model model, HttpServletRequest request, Integer page) {
+		List<Employee> employees = employeeService.showList();
+		if (page == null){
+			page = 1;
+		}
+
+
+		List<Employee> employeeList = employeeService.findTenEmployees(offset);
+		int size = employeeLists.size();
+		int pages = (int) Math.ceil((double)size / 10);
+		Integer offset = page * 10 - 9;
+		List<Integer> pageList = new ArrayList<>();
+		// 1からページ数までの数字をリストに追加
+		for (int i = 1; i <= pages; i++) {
+			pageList.add(i);
+		}
+
+
+		if (form.getName() == null) {
+
+			List<Employee> employeeList = employeeService.showList();
+			int size = employeeLists.size();
+			int pages = (int) Math.ceil((double)size / 10);
+			Integer offset = page * 10 - 9;
+			List<Integer> pageList = new ArrayList<>();
+			// 1からページ数までの数字をリストに追加
+			for (int i = 1; i <= pages; i++) {
+				pageList.add(i);
+			}
+
+			model.addAttribute("employeeList", employeeList);
+			return "employee/list";
+		}
+
+		List<Employee> employeeList = employeeService.searchName(form.getName());
+		if (employeeList.isEmpty()) {
+			if (request.getParameterMap().containsKey("name")){
+				model.addAttribute("errorEmpty", "１件もありませんでした");
+			}
+			employeeList = employeeService.showList();
+		}
+
+		model.addAttribute("pageList", pageList);
+		model.addAttribute("employeeList", employeeList);
+		return "employee/list";
+	}
 
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を表示する
